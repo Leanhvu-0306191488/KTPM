@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KTPM.Data;
 
 namespace KTPM
 {
@@ -25,8 +26,16 @@ namespace KTPM
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+            services.AddSession(ses =>
+            {
+                ses.IdleTimeout = new TimeSpan(7, 0, 0, 0);
+            });
             services.AddDbContext<ShopContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Shop")));
             services.AddControllersWithViews();
+
+            services.AddDbContext<KTPMContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("KTPMContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +55,7 @@ namespace KTPM
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
 

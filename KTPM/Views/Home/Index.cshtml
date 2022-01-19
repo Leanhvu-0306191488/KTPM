@@ -1,4 +1,5 @@
-﻿<section id="slider">
+﻿
+<section id="slider">
     <!--slider-->
     <div class="container">
         <div class="row">
@@ -760,3 +761,18 @@
         </div>
     </div>
 </section>
+
+
+@{
+    ViewData["Title"] = "Home Page";
+    string username;
+    if (ViewBag.AccountUsername != null)
+    {
+        username = ViewBag.AccountUsername;
+    }
+    else
+    {
+        username = "khách";
+    }
+}
+

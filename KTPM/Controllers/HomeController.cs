@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace KTPM.Controllers
 {
@@ -20,6 +21,14 @@ namespace KTPM.Controllers
 
         public IActionResult Index()
         {
+            /*if(HttpContext.Request.Cookies.ContainsKey("AccountUsername"))
+            {
+                ViewBag.AccountUsername = HttpContext.Request.Cookies["AccountUsername"].ToString(); 
+            }  */
+            if (HttpContext.Session.Keys.Contains("AccountUsername"))
+            {
+                ViewBag.AccountUsername = HttpContext.Session.GetString("AccountUsername");
+            }
             return View();
         }
 
