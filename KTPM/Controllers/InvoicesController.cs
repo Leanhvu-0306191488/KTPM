@@ -8,9 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using MVC.Data;
 using MVC.Models;
 
-namespace KTPM.Areas.Admin.Controllers
+namespace KTPM.Controllers
 {
-    [Area("Admin")]
     public class InvoicesController : Controller
     {
         private readonly ShopContext _context;
@@ -20,14 +19,14 @@ namespace KTPM.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/Invoices
+        // GET: Invoices
         public async Task<IActionResult> Index()
         {
-            var shopContext = _context.Invoices.Include(i => i.Account);
-            return View(await shopContext.ToListAsync());
+            var kTPMContext = _context.Invoices.Include(i => i.Account);
+            return View(await kTPMContext.ToListAsync());
         }
 
-        // GET: Admin/Invoices/Details/5
+        // GET: Invoices/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -38,16 +37,6 @@ namespace KTPM.Areas.Admin.Controllers
             var invoice = await _context.Invoices
                 .Include(i => i.Account)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var invoicdetail = _context.InvoiceDetails.Include(i => i.Product).Where(inv => inv.InvoiceId == id).ToList();
-
-            if (invoicdetail != null)
-            {
-                ViewBag.invoice = invoicdetail;
-            }
-            else
-            {
-                ViewBag.invoice = 0;
-            }
             if (invoice == null)
             {
                 return NotFound();
@@ -56,14 +45,14 @@ namespace KTPM.Areas.Admin.Controllers
             return View(invoice);
         }
 
-        // GET: Admin/Invoices/Create
+        // GET: Invoices/Create
         public IActionResult Create()
         {
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "Id", "Username");
+            ViewData["AccountId"] = new SelectList(_context.Set<Account>(), "Id", "Username");
             return View();
         }
 
-        // POST: Admin/Invoices/Create
+        // POST: Invoices/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -76,11 +65,11 @@ namespace KTPM.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "Id", "Username", invoice.AccountId);
+            ViewData["AccountId"] = new SelectList(_context.Set<Account>(), "Id", "Username", invoice.AccountId);
             return View(invoice);
         }
 
-        // GET: Admin/Invoices/Edit/5
+        // GET: Invoices/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -93,11 +82,11 @@ namespace KTPM.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "Id", "Username", invoice.AccountId);
+            ViewData["AccountId"] = new SelectList(_context.Set<Account>(), "Id", "Username", invoice.AccountId);
             return View(invoice);
         }
 
-        // POST: Admin/Invoices/Edit/5
+        // POST: Invoices/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -129,11 +118,11 @@ namespace KTPM.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "Id", "Username", invoice.AccountId);
+            ViewData["AccountId"] = new SelectList(_context.Set<Account>(), "Id", "Username", invoice.AccountId);
             return View(invoice);
         }
 
-        // GET: Admin/Invoices/Delete/5
+        // GET: Invoices/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -152,7 +141,7 @@ namespace KTPM.Areas.Admin.Controllers
             return View(invoice);
         }
 
-        // POST: Admin/Invoices/Delete/5
+        // POST: Invoices/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
