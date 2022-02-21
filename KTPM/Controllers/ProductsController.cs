@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using KTPM.Data;
+using MVC.Data;
 using MVC.Models;
 
 namespace KTPM.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly KTPMContext _context;
+        private readonly ShopContext _context;
 
-        public ProductsController(KTPMContext context)
+        public ProductsController(ShopContext context)
         {
             _context = context;
         }

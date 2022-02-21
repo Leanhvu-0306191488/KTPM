@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KTPM.Data;
 using MVC.Models;
+using MVC.Data;
 
 namespace KTPM.Controllers
 {
     public class InvoiceDetailsController : Controller
     {
-        private readonly KTPMContext _context;
+        private readonly ShopContext _context;
 
-        public InvoiceDetailsController(KTPMContext context)
+        public InvoiceDetailsController(ShopContext context)
         {
             _context = context;
         }

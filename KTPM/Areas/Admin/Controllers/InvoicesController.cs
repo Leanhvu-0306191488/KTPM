@@ -38,6 +38,16 @@ namespace KTPM.Areas.Admin.Controllers
             var invoice = await _context.Invoices
                 .Include(i => i.Account)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var invoicdetail = _context.InvoiceDetails.Include(i => i.Product).Where(inv => inv.InvoiceId == id).ToList();
+
+            if (invoicdetail != null)
+            {
+                ViewBag.invoice = invoicdetail;
+            }
+            else
+            {
+                ViewBag.invoice = 0;
+            }
             if (invoice == null)
             {
                 return NotFound();

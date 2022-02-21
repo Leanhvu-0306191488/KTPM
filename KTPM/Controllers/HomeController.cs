@@ -7,16 +7,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using MVC.Data;
 
 namespace KTPM.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ShopContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ShopContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -29,7 +32,8 @@ namespace KTPM.Controllers
             {
                 ViewBag.AccountUsername = HttpContext.Session.GetString("AccountUsername");
             }
-            return View();
+            var prd = _context.Products.ToList();
+            return View(prd);
         }
 
         public IActionResult Privacy()

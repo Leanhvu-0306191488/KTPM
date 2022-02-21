@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using KTPM.Data;
+using MVC.Data;
 using MVC.Models;
 using Microsoft.AspNetCore.Http;
 
@@ -13,9 +13,9 @@ namespace KTPM.Controllers
 {
     public class AccountsController : Controller
     {
-        private readonly KTPMContext _context;
+        private readonly ShopContext _context;
 
-        public AccountsController(KTPMContext context)
+        public AccountsController(ShopContext context)
         {
             _context = context;
         }
