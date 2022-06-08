@@ -8,26 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using MVC.Data;
 using MVC.Models;
 
-namespace KTPM.Areas.Admin.Controllers
+namespace KTPM.Controllers
 {
-    [Area("Admin")]
-    public class InvoicesController : Controller
+    public class ProductTypesController : Controller
     {
         private readonly ShopContext _context;
 
-        public InvoicesController(ShopContext context)
+        public ProductTypesController(ShopContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/Invoices
+        // GET: ProductTypes
         public async Task<IActionResult> Index()
         {
-            var shopContext = _context.Invoices.Include(i => i.Account);
-            return View(await shopContext.ToListAsync());
+            return View(await _context.ProductTypes.ToListAsync());
         }
 
-        // GET: Admin/Invoices/Details/5
+        // GET: ProductTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,52 +33,39 @@ namespace KTPM.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                .Include(i => i.Account)
+            var productType = await _context.ProductTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var invoicdetail = _context.InvoiceDetails.Include(i => i.Product).Where(inv => inv.InvoiceId == id).ToList();
-
-            if (invoicdetail != null)
-            {
-                ViewBag.invoice = invoicdetail;
-            }
-            else
-            {
-                ViewBag.invoice = 0;
-            }
-            if (invoice == null)
+            if (productType == null)
             {
                 return NotFound();
             }
 
-            return View(invoice);
+            return View(productType);
         }
 
-        // GET: Admin/Invoices/Create
+        // GET: ProductTypes/Create
         public IActionResult Create()
         {
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "Id", "Username");
             return View();
         }
 
-        // POST: Admin/Invoices/Create
+        // POST: ProductTypes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,AccountId,IssuedDate,ShippingAddress,ShippingPhone,Total,Status")] Invoice invoice)
+        public async Task<IActionResult> Create([Bind("Id,Name,Status")] ProductType productType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(invoice);
+                _context.Add(productType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "Id", "Username", invoice.AccountId);
-            return View(invoice);
+            return View(productType);
         }
 
-        // GET: Admin/Invoices/Edit/5
+        // GET: ProductTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,23 +73,22 @@ namespace KTPM.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices.FindAsync(id);
-            if (invoice == null)
+            var productType = await _context.ProductTypes.FindAsync(id);
+            if (productType == null)
             {
                 return NotFound();
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "Id", "Username", invoice.AccountId);
-            return View(invoice);
+            return View(productType);
         }
 
-        // POST: Admin/Invoices/Edit/5
+        // POST: ProductTypes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,AccountId,IssuedDate,ShippingAddress,ShippingPhone,Total,Status")] Invoice invoice)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Status")] ProductType productType)
         {
-            if (id != invoice.Id)
+            if (id != productType.Id)
             {
                 return NotFound();
             }
@@ -113,12 +97,12 @@ namespace KTPM.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(invoice);
+                    _context.Update(productType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!InvoiceExists(invoice.Id))
+                    if (!ProductTypeExists(productType.Id))
                     {
                         return NotFound();
                     }
@@ -129,11 +113,10 @@ namespace KTPM.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountId"] = new SelectList(_context.Accounts, "Id", "Username", invoice.AccountId);
-            return View(invoice);
+            return View(productType);
         }
 
-        // GET: Admin/Invoices/Delete/5
+        // GET: ProductTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -141,31 +124,30 @@ namespace KTPM.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                .Include(i => i.Account)
+            var productType = await _context.ProductTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (invoice == null)
+            if (productType == null)
             {
                 return NotFound();
             }
 
-            return View(invoice);
+            return View(productType);
         }
 
-        // POST: Admin/Invoices/Delete/5
+        // POST: ProductTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
-            _context.Invoices.Remove(invoice);
+            var productType = await _context.ProductTypes.FindAsync(id);
+            _context.ProductTypes.Remove(productType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InvoiceExists(int id)
+        private bool ProductTypeExists(int id)
         {
-            return _context.Invoices.Any(e => e.Id == id);
+            return _context.ProductTypes.Any(e => e.Id == id);
         }
     }
 }
